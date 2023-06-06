@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { LayoutDashboard, MessageSquare, User ,Video,Bitcoin,ListOrdered,LogOut  } from "lucide-react";
-
+import Home from './Home'
 const App = () => {
   const [open, setOpen] = useState(true);
 
@@ -31,11 +31,11 @@ const App = () => {
         <div className="flex gap-x-4 items-center">
           
           <h1
-            className={`text-white origin-left font-medium text-xl duration-200 ${
+            className={`text-white origin-left  text-2xl duration-200 ${
               !open && "scale-0"
             }`}
           >
-            Designer
+            ShipLit🚀
           </h1>
         </div>
         <ul className="pt-6">
@@ -53,8 +53,8 @@ const App = () => {
           ))}
         </ul>
       </div>
-      <div className="h-screen flex-1 p-7">
-        <h1 className="text-2xl font-semibold ">Home Page</h1>
+      <div className="h-screen flex-1 p-7 text-white">
+                <Home />
       </div>
     </div>
   );
