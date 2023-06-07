@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import dynamic from "next/dynamic";
 import Navbar from "../components/shared/Navbar";
 import { useAccount } from 'wagmi'
-import createProject from '../polybase/poly'
+import supabase from "@/utils/supabase";
 type FormData = {
   name: string;
   profile: string;
@@ -71,14 +71,21 @@ const ProjectForm: React.FC = () => {
     }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     // You can perform additional logic here, such as saving the form data
-    
-    console.log({address,...formData})
-    createProject({address,...formData}).then((res:any)=>{
-       console.log(res)
-    })
+     console.log(formData)
+     const { data, error } = await supabase
+    .from('Projects')
+    .insert([
+    { name: formData.name, 
+    profile: formData.profile,
+    tagline: formData.tagline,
+    description: formData.description,
+    link: formData.link,
+    twitter: formData.twitter },
+    ])
+    console.log(data)
     // Reset the form
     setFormData(initialFormData);
   };
