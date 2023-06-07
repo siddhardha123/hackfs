@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { Heart, Bell } from "lucide-react";
-import IndividualCard from "./IndividualCard";
 import Navbar from "../components/shared/Navbar";
 
 const CardPage: React.FC = () => {

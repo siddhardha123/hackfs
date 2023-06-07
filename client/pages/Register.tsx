@@ -1,22 +1,26 @@
 import React, { useState } from "react";
+import dynamic from "next/dynamic";
 import Navbar from "../components/shared/Navbar";
-
+import { useAccount } from 'wagmi'
+import createProject from '../polybase/poly'
 type FormData = {
   name: string;
+  profile: string;
+  tagline : string;
   description: string;
-  profileImage: string;
   link: string;
   twitter: string;
 };
 
 const initialFormData: FormData = {
   name: "",
+  profile: "",
+  tagline:"",
   description: "",
-  profileImage: "",
   link: "",
   twitter: "",
 };
-
+// id,name,profile,tagline,description,link,twitter,likes
 type InputFieldProps = {
   label: string;
   id: keyof FormData;
@@ -59,7 +63,7 @@ const InputField: React.FC<InputFieldProps> = ({
 
 const ProjectForm: React.FC = () => {
   const [formData, setFormData] = useState(initialFormData);
-
+  const { address } = useAccount()
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData((prevFormData) => ({
       ...prevFormData,
@@ -70,7 +74,11 @@ const ProjectForm: React.FC = () => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     // You can perform additional logic here, such as saving the form data
-    console.log(formData);
+    
+    console.log({address,...formData})
+    createProject({address,...formData}).then((res:any)=>{
+       console.log(res)
+    })
     // Reset the form
     setFormData(initialFormData);
   };
@@ -78,7 +86,7 @@ const ProjectForm: React.FC = () => {
   return (
     <>
       <Navbar />
-      <div className="flex items-center justify-center h-screen ">
+      <div className="mt-10 flex items-center justify-center h-screen ">
         <form
           onSubmit={handleSubmit}
           className="max-w-md w-full px-6 py-8 bg-white rounded-lg shadow-lg"
@@ -94,19 +102,27 @@ const ProjectForm: React.FC = () => {
             required
           />
           <InputField
+            label="Profile"
+            id="profile"
+            value={formData.profile}
+            onChange={handleChange}
+            required
+          />
+          <InputField
+            label="Tag Line"
+            id="tagline"
+            value={formData.tagline}
+            onChange={handleChange}
+            required
+          />
+          <InputField
             label="Description"
             id="description"
             value={formData.description}
             onChange={handleChange}
             required
           />
-          <InputField
-            label="Profile Image"
-            id="profileImage"
-            value={formData.profileImage}
-            onChange={handleChange}
-            required
-          />
+         
           <InputField
             label="Link"
             id="link"
@@ -126,7 +142,7 @@ const ProjectForm: React.FC = () => {
               type="submit"
               className="inline-flex items-center px-4 py-2 bg-indigo-500 border border-transparent rounded-md font-semibold text-white hover:bg-indigo-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
             >
-              Submit
+             {address ? "Submit" : "connect wallet"} 
             </button>
           </div>
         </form>
@@ -135,4 +151,4 @@ const ProjectForm: React.FC = () => {
   );
 };
 
-export default ProjectForm;
+export default dynamic(() => Promise.resolve(ProjectForm), { ssr: false });
