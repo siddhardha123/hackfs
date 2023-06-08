@@ -1,30 +1,27 @@
 import React from 'react'
-import ProfilePage from '@/components/ProfilePage';
-import baseUrl from '../../baseUrl.json'
-
+import supabase from "@/utils/supabase";
+import dynamic from "next/dynamic";
+import Project from '../../components/shared/Project'
   export const getServerSideProps = async (context : any) => {
     const id = context.params.id;
-    const educatorId = context.params.id;
-    const res1 = await fetch(`${baseUrl.url}/api/educators/getEducators/${id}`);
-    const res2 = await fetch(`${baseUrl.url}/api/meetings/getMeetings/${educatorId}`);
-    const res3 = await fetch(`${baseUrl.url}/api/meetings/getMaterials/${educatorId}`);
-    const educators = await res1.json();
-    const meetings = await res2.json();
-    const materials = await res3.json();
-    
+    const { data: projdata, error } = await supabase
+    .from('Projects')
+    .select('*')
+    .eq('id', id);
+  
+  
+  
     return {
       props: {
-        educators,
-        meetings,
-        materials,
+        projdata
       },
     };
   };
   
-  const myData = ({ educators,meetings,materials } : any) => {
+  const myData = ({ projdata } : any) => {
     return (
       <>
-        <ProfilePage data={educators}  meetings={meetings}  materials={materials}/>
+        <Project projdata={projdata[0]}/>
       </>
     );
   };
