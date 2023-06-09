@@ -1,6 +1,26 @@
-import React from 'react'
+import React,{useState,useEffect} from 'react'
 import NavBar from '../components/shared/Navbar'
+import Modal from '../components/modal/modal';
+
 const Home = () => {
+    const [showModal, setShowModal] = useState(false);
+    const handleConfirm = (value: string) => {
+        // Simulate API call to fetch project value
+        const fetchedValue = 'example-project';
+    
+        if (value === fetchedValue) {
+          console.log('Access granted to dashboard page');
+          // Redirect or perform any other action
+        } else {
+          console.log('No project found, register');
+          // Show appropriate message or perform any other action
+        }
+      };
+      const handleCloseModal = () => {
+        setShowModal(false);
+      };
+
+     
   return (
     <>
         <NavBar />
@@ -17,14 +37,18 @@ const Home = () => {
                        
                     </p>
                     <div className="items-center justify-center gap-x-3 space-y-3 sm:flex sm:space-y-0">
-                        <a href="/dashboard" className="block py-2 px-4 text-white font-medium bg-indigo-600 duration-150 hover:bg-indigo-500 active:bg-indigo-700 rounded-lg shadow-lg hover:shadow-none">
+                        <button
+                         className="block py-2 px-4 text-white font-medium bg-indigo-600 duration-150 hover:bg-indigo-500 active:bg-indigo-700 rounded-lg shadow-lg hover:shadow-none"
+                         onClick={() => setShowModal(true)}>
                             Launch Dapp 
-                        </a>
+                        </button>
                         <a href="/projects" className="block py-2 px-4 text-white font-medium bg-indigo-600 duration-150 hover:bg-indigo-500 active:bg-indigo-700 rounded-lg shadow-lg hover:shadow-none">
                             Explore
                         </a>
-                       
+                        {showModal && <Modal onConfirm={handleConfirm} onClose={handleCloseModal}/>}
+                   
                     </div>
+
                     
                 </div>
               

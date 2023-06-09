@@ -10,8 +10,7 @@ const NavBar:NextComponentType = () => {
      
   // Replace javascript:void(0) path with your path
   const navigation = [
-      { title: "Dashboard", path: "/dashboard" },
-      { title: "donations", path: "/Educators" },
+     
       
   ]
   return (
