@@ -5,7 +5,7 @@ type ProjectComponentProps = {
   projectName: string;
 };
 
-const ProjectComponent: React.FC<ProjectComponentProps> = ({ projectName }) => {
+const ProjectComponent: React.FC<ProjectComponentProps> = ({ Projects } : any) => {
   const [announcement, setAnnouncement] = useState('');
   const [meetingDateTime, setMeetingDateTime] = useState('');
   
@@ -37,19 +37,25 @@ const ProjectComponent: React.FC<ProjectComponentProps> = ({ projectName }) => {
     setMeetingDateTime(e.target.value);
   };
 
-  const handleAnnouncementPublish = () => {
+  const handleAnnouncementPublish = async () => {
     // Handle announcement publish logic here
+const { data, error } = await supabase
+.from('announcements')
+.insert([
+  { some_column: 'someValue', other_column: 'otherValue' },
+])
+
     console.log('Publish announcement:', announcement);
   };
 
-  const handleMeetingPublish = () => {
+  const handleMeetingPublish = async () => {
     // Handle meeting publish logic here
     console.log('Publish meeting:', meetingDateTime);
   };
   
   return (
     <div className="flex flex-col justify-center space-y-8">
-      <h1 className="text-4xl font-bold">Welcome to {projectName}</h1>
+      <h1 className="text-4xl font-bold">Welcome to {Projects[0].name}</h1>
 
       
         <div className="flex flex-col  space-y-2">

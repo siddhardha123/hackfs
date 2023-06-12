@@ -5,14 +5,31 @@ import {useRouter} from "next/router"
 import dynamic from "next/dynamic";
 import Home from '@/components/dashboard/Home'
 import Donations from '@/components/dashboard/Donations'
+import supabase from '@/utils/supabase';
+export const getServerSideProps = async (context : any) => {
+  const id = context.params.id;
+  
+  
+let { data: Projects, error } = await supabase
+.from('Projects')
+.select('*')
+.eq('id',id)
 
+  
+  return {
+    props: {
+      Projects
+    },
+  };
+};
 const Leaderboard = () => {
   return <h2>Leaderboard Component</h2>;
 };
 
-const App = () => {
+const App = ({Projects} : any) => {
   const [open, setOpen] = useState(true);
-  const [activeComponent, setActiveComponent] = useState("Dashboard");
+  const [projectdata,setProjectdata] = useState({})
+  const [activeComponent, setActiveComponent] = useState("Home");
   const {address} = useAccount()
   const sessionToken = localStorage.getItem('sessionToken');
   const router = useRouter()
@@ -41,7 +58,13 @@ const App = () => {
   useEffect(()=>{
     if (sessionToken != address) {
       router.push(`/`)
+    }else{
+        
+      
+        
     }
+
+
   },[address])
 
   return (
@@ -78,9 +101,9 @@ const App = () => {
         </ul>
       </div>
       <div className="h-screen flex-1 p-7 text-white">
-        {activeComponent === "Home" && <Home />}
-        {activeComponent === "Donations" && <Donations />}
-        {activeComponent === "Leaderboard" && <Leaderboard />}
+        {activeComponent === "Home" && <Home Projects={Projects}/>}
+        {activeComponent === "Donations" && <Donations Projects={Projects}/>}
+        {activeComponent === "Leaderboard" && <Leaderboard Projects={Projects}/>}
       </div>
     </div>
   );
