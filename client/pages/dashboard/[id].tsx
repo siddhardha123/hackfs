@@ -1,6 +1,8 @@
-import { useState } from 'react';
+import { useState,useEffect } from 'react';
 import { LayoutDashboard, MessageSquare, User, Video, Bitcoin, ListOrdered, LogOut } from "lucide-react";
-
+import {useAccount} from 'wagmi'
+import {useRouter} from "next/router"
+import dynamic from "next/dynamic";
 import Home from '@/components/dashboard/Home'
 import Donations from '@/components/dashboard/Donations'
 
@@ -11,7 +13,9 @@ const Leaderboard = () => {
 const App = () => {
   const [open, setOpen] = useState(true);
   const [activeComponent, setActiveComponent] = useState("Dashboard");
-
+  const {address} = useAccount()
+  const sessionToken = localStorage.getItem('sessionToken');
+  const router = useRouter()
   const Menus = [
     { title: "Home", icon: <LayoutDashboard />, component: <Home /> },
     { title: "Donations", icon: <Bitcoin />, component: <Donations /> },
@@ -22,10 +26,23 @@ const App = () => {
   const toggleSidebar = () => {
     setOpen(!open);
   };
+ 
+  
 
-  const handleMenuClick = (title) => {
+  const handleMenuClick = (title : any) => {
+    
+    if(title == 'Logout'){
+      console.log("hello")
+      localStorage.removeItem('sessionToken'); // Remove session token from localStorage
+      router.push('/');
+    }
     setActiveComponent(title);
   };
+  useEffect(()=>{
+    if (sessionToken != address) {
+      router.push(`/`)
+    }
+  },[address])
 
   return (
     <div className="flex rounded-xl">
@@ -50,7 +67,7 @@ const App = () => {
               key={index}
               className={`flex  rounded-md p-2 cursor-pointer hover:bg-light-white text-white text-sm items-center gap-x-4 
               ${Menu.gap ? "mt-9" : "mt-2"} ${index === 0 && "bg-light-white"}`}
-              onClick={() => handleMenuClick(Menu.title)}
+              onClick={()=>handleMenuClick(Menu.title)}
             >
               {Menu.icon}
               <span className={`${!open && "hidden"} origin-left duration-200`}>
@@ -69,4 +86,4 @@ const App = () => {
   );
 };
 
-export default App;
+export default dynamic(() => Promise.resolve(App), { ssr: false });

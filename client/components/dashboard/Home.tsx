@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useRouter } from 'next/router';
 
 type ProjectComponentProps = {
   projectName: string;
@@ -7,6 +8,7 @@ type ProjectComponentProps = {
 const ProjectComponent: React.FC<ProjectComponentProps> = ({ projectName }) => {
   const [announcement, setAnnouncement] = useState('');
   const [meetingDateTime, setMeetingDateTime] = useState('');
+  
   
   const stats =[
      {
@@ -44,7 +46,7 @@ const ProjectComponent: React.FC<ProjectComponentProps> = ({ projectName }) => {
     // Handle meeting publish logic here
     console.log('Publish meeting:', meetingDateTime);
   };
-
+  
   return (
     <div className="flex flex-col justify-center space-y-8">
       <h1 className="text-4xl font-bold">Welcome to {projectName}</h1>

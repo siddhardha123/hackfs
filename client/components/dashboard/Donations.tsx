@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import { saveAs } from 'file-saver';
 
 const Donations = () => {
   const [currentPage, setCurrentPage] = useState(1);
+  
   const [pageSize] = useState(10); // Number of rows per page
   const [donations] = useState([
     { address: '0x123456789', amount: 100, timestamp: '2023-06-01 10:00 AM' },
@@ -18,7 +19,7 @@ const Donations = () => {
     { address: '0x987654321', amount: 200, timestamp: '2023-06-02 09:00 AM' },
     // Add more donation objects here
   ]);
-
+  
   const handleDownloadCSV = () => {
     const csvData = [
       ['Address', 'Amount', 'Timestamp'],

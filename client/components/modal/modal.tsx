@@ -3,7 +3,7 @@ import { ConnectButton } from '@rainbow-me/rainbowkit';
 import { useAccount } from 'wagmi'
 import supabase from "@/utils/supabase";
 type ModalProps = {
-  onConfirm: (value: string) => void;
+  onConfirm: (value: any) => void;
 };
 
 const Modal: React.FC<ModalProps> = ({ onConfirm ,onClose }) => {
@@ -17,8 +17,8 @@ const Modal: React.FC<ModalProps> = ({ onConfirm ,onClose }) => {
    .from('Projects')
    .select('name')
    .eq('address',add)
-
-    setName(projname[0].name)
+    
+   setName(projname[0]?.name ?? "");
     console.log(projname)
   }
   useEffect(()=>{
@@ -28,7 +28,7 @@ const Modal: React.FC<ModalProps> = ({ onConfirm ,onClose }) => {
   },[address])
 
   const handleSubmit = () => {
-    onConfirm(value);
+    onConfirm(address);
   };
   const handleOverlayClick = () => {
     onClose();
@@ -41,7 +41,7 @@ const Modal: React.FC<ModalProps> = ({ onConfirm ,onClose }) => {
         <ConnectButton/>
         
         <p className="text-black"> {name == '' ? "No project found" : name}</p>
-       {name != '' && <button className="block py-2 px-4 text-white font-medium bg-indigo-600 duration-150 hover:bg-indigo-500 active:bg-indigo-700 rounded-lg shadow-lg hover:shadow-none">continue</button> }
+       {name != '' && <button className="block py-2 px-4 text-white font-medium bg-indigo-600 duration-150 hover:bg-indigo-500 active:bg-indigo-700 rounded-lg shadow-lg hover:shadow-none" onClick={handleSubmit}>continue</button> }
       </div>
     </div>
   );

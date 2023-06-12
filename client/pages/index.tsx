@@ -1,18 +1,28 @@
 import React,{useState,useEffect} from 'react'
 import NavBar from '../components/shared/Navbar'
 import Modal from '../components/modal/modal';
-
+import supabase from '@/utils/supabase'
+import { useRouter } from 'next/router';
 const Home = () => {
     const [showModal, setShowModal] = useState(false);
-    const handleConfirm = (value: string) => {
+    const router = useRouter()
+    const handleConfirm = async (value: string) => {
         // Simulate API call to fetch project value
-        const fetchedValue = 'example-project';
-    
-        if (value === fetchedValue) {
+        
+let { data: Projects, error } = await supabase
+.from('Projects')
+.select('id , address')
+.eq('address',value)
+
+        console.log(Projects)
+        if (value === Projects[0]?.address) {
+          localStorage.setItem('sessionToken', value);
           console.log('Access granted to dashboard page');
+          router.push(`/dashboard/${Projects[0]?.id}`)
           // Redirect or perform any other action
         } else {
           console.log('No project found, register');
+          router.push(`/`)
           // Show appropriate message or perform any other action
         }
       };
