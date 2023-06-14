@@ -1,11 +1,13 @@
 import { useState } from 'react';
 import { useRouter } from 'next/router';
-
+import toast, { Toaster } from 'react-hot-toast';
+import supabase from '@/utils/supabase'
+import projects from '@/pages/projects';
 type ProjectComponentProps = {
   projectName: string;
 };
 
-const ProjectComponent: React.FC<ProjectComponentProps> = ({ Projects } : any) => {
+const ProjectComponent: React.FC<ProjectComponentProps> = ({ projectData } : any) => {
   const [announcement, setAnnouncement] = useState('');
   const [meetingDateTime, setMeetingDateTime] = useState('');
   
@@ -38,15 +40,16 @@ const ProjectComponent: React.FC<ProjectComponentProps> = ({ Projects } : any) =
   };
 
   const handleAnnouncementPublish = async () => {
-    // Handle announcement publish logic here
-const { data, error } = await supabase
+  const { data, error } = await supabase
 .from('announcements')
 .insert([
-  { some_column: 'someValue', other_column: 'otherValue' },
+  { projectId: projectData[0]?.id, description : announcement },
 ])
-
-    console.log('Publish announcement:', announcement);
-  };
+  toast("announcement posted")
+  console.log(data)
+  console.log(projectData)
+  setAnnouncement(" ")
+};
 
   const handleMeetingPublish = async () => {
     // Handle meeting publish logic here
@@ -54,8 +57,11 @@ const { data, error } = await supabase
   };
   
   return (
+    <>
+     <Toaster />
     <div className="flex flex-col justify-center space-y-8">
-      <h1 className="text-4xl font-bold">Welcome to {Projects[0].name}</h1>
+
+      <h1 className="text-4xl font-bold">Welcome to {projectData[0].name}</h1>
 
       
         <div className="flex flex-col  space-y-2">
@@ -150,7 +156,9 @@ const { data, error } = await supabase
         </button>
       </div>
     </div>
+    </>
   );
+
 };
 
 export default ProjectComponent;

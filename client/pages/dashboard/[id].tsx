@@ -10,7 +10,7 @@ export const getServerSideProps = async (context : any) => {
   const id = context.params.id;
   
   
-let { data: Projects, error } = await supabase
+let { data: projectData, error } = await supabase
 .from('Projects')
 .select('*')
 .eq('id',id)
@@ -18,7 +18,7 @@ let { data: Projects, error } = await supabase
   
   return {
     props: {
-      Projects
+      projectData
     },
   };
 };
@@ -26,7 +26,7 @@ const Leaderboard = () => {
   return <h2>Leaderboard Component</h2>;
 };
 
-const App = ({Projects} : any) => {
+const App = ({projectData} : any) => {
   const [open, setOpen] = useState(true);
   const [projectdata,setProjectdata] = useState({})
   const [activeComponent, setActiveComponent] = useState("Home");
@@ -101,9 +101,9 @@ const App = ({Projects} : any) => {
         </ul>
       </div>
       <div className="h-screen flex-1 p-7 text-white">
-        {activeComponent === "Home" && <Home Projects={Projects}/>}
-        {activeComponent === "Donations" && <Donations Projects={Projects}/>}
-        {activeComponent === "Leaderboard" && <Leaderboard Projects={Projects}/>}
+        {activeComponent === "Home" && <Home projectData={projectData}/>}
+        {activeComponent === "Donations" && <Donations projectData={projectData}/>}
+        {activeComponent === "Leaderboard" && <Leaderboard projectData={projectData}/>}
       </div>
     </div>
   );
