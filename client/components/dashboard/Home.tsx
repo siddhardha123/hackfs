@@ -10,7 +10,7 @@ type ProjectComponentProps = {
 const ProjectComponent: React.FC<ProjectComponentProps> = ({ projectData } : any) => {
   const [announcement, setAnnouncement] = useState('');
   const [meetingDateTime, setMeetingDateTime] = useState('');
-  
+  const [meetAnnouncement,setMeetAnnouncement] = useState('');
   
   const stats =[
      {
@@ -38,12 +38,15 @@ const ProjectComponent: React.FC<ProjectComponentProps> = ({ projectData } : any
   const handleMeetingDateTimeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setMeetingDateTime(e.target.value);
   };
+  const handleMeetAnnouncementChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setMeetAnnouncement(e.target.value);
+  };
 
   const handleAnnouncementPublish = async () => {
   const { data, error } = await supabase
 .from('announcements')
 .insert([
-  { projectId: projectData[0]?.id, description : announcement },
+  { projectId: projectData[0]?.id, description : meetAnnouncement },
 ])
   toast("announcement posted")
   console.log(data)
@@ -52,7 +55,17 @@ const ProjectComponent: React.FC<ProjectComponentProps> = ({ projectData } : any
 };
 
   const handleMeetingPublish = async () => {
-    // Handle meeting publish logic here
+
+    
+    const { data, error } = await supabase
+    .from('meetings')
+    .insert([
+      { projectId: projectData[0]?.id, description :meetAnnouncement, roomId : roomid  },
+    ])
+      toast("announcement posted")
+      console.log(data)
+      console.log(projectData)
+      setAnnouncement(" ")
     console.log('Publish meeting:', meetingDateTime);
   };
   
@@ -148,6 +161,12 @@ const ProjectComponent: React.FC<ProjectComponentProps> = ({ projectData } : any
           value={meetingDateTime}
           onChange={handleMeetingDateTimeChange}
         />
+        <textarea
+            className="p-2 border border-gray-300 text-black rounded-md resize-none"
+            placeholder="Write your announcement..."
+            value={meetAnnouncement}
+            onChange={handleMeetAnnouncementChange}
+          ></textarea>
         <button
           className="px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600"
           onClick={handleMeetingPublish}
